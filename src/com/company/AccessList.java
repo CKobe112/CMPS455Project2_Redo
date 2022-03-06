@@ -39,6 +39,12 @@ public class AccessList {
             return fileRange;
         }
 
+        //random int from 3 to 7
+        public int TtoS(){
+            Random random = new Random();
+            return random.nextInt();
+        }
+
     }
 
 
