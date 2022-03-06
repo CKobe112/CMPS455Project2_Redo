@@ -42,7 +42,27 @@ public class AccessList {
         //random int from 3 to 7
         public int TtoS(){
             Random random = new Random();
-            return random.nextInt();
+            return (random.nextInt(7 - 3 + 1) + 3);
+        }
+
+        public LinkedList<AccessList> buildList(int fileRange, int domainRange){
+
+            LinkedList<AccessList> mainList = new LinkedList<>();
+
+            for (int i = 0; i < fileRange; i++){
+
+                int prev;
+                int current;
+                AccessList internal = new AccessList();
+
+                for (int j = 0; j < domainRange; j++){
+
+                }
+
+            }
+
+            return mainList;
+
         }
 
     }
