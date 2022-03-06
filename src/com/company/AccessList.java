@@ -3,7 +3,7 @@ package com.company;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class AccessList {
+public class AccessList extends Thread {
 
     public int fileRange;
     public int domainRange;
