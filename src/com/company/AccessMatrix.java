@@ -7,13 +7,19 @@ import java.util.concurrent.locks.Lock;
  * Construct an access matrix with permission for each object based on the domain
  */
 public class AccessMatrix extends Thread {
+
+
+    static int domainRange;
+    static int objectsRange;
     static int domain;
-    static int objects;
-    static int permissions;
+    static int column;
     static String[][] matrix;
     static Lock lock;
+    static Random random = new Random();
+    static String[] charArray;
+
     public static String randomDomain(){
-        int r = 1 + (int) (Math.random() * ((1) + 1));
+        int r = random.nextInt(2);
         if (r==0){
             return "A";
         }
@@ -22,30 +28,90 @@ public class AccessMatrix extends Thread {
         }
     }
     public static String randomPermission(){
-        int r = 1 + (int) (Math.random() * ((2 ) + 1));
+        int r = random.nextInt(3);
         if (r==0){
             return "R";
         }
         else if (r==1){
             return "W";
         }
-        else if (r==2){
+        else {
             return "R/W";
         }
-        else{
-            return "";
+
+    }
+
+
+
+
+
+    public void read(){
+        //need to change to actual file number, but this is a temp solution
+        int charPosition = random.nextInt(objectsRange);
+        System.out.println(charArray[charPosition]);
+    }
+    public String write(){
+        int randomString = random.nextInt(6);
+        if(randomString == 0){
+            return "Green";
+        }
+        else if(randomString == 1){
+            return "Red";
+        }
+        else if(randomString == 2){
+            return "Yellow";
+        }
+        else if(randomString == 3){
+            return "Blue";
+        }
+        else if(randomString == 4){
+            return "Purple";
+        }
+        else {
+            return "Rainbow";
         }
     }
-//    public static void read(int row, int column){
-//        matrix[row][column] = "R";
+
+
+    //getters and setters, probably wont need most of these
+    public static int getDomainRange() {
+        return domainRange;
+    }
+
+    public static int getObjectsRange() {
+        return objectsRange;
+    }
+
+    public static int getDomain() {
+        return domain;
+    }
+
+    public static void setDomain(int domain) {
+        AccessMatrix.domain = domain;
+    }
+
+    public static int getColumn() {
+        return column;
+    }
+
+    public static void setColumn(int column) {
+        AccessMatrix.column = column;
+    }
+
+    public static String[][] getMatrix() {
+        return matrix;
+    }
+
+//    public static void setMatrix(String[][] matrix) {
+//        AccessMatrix.matrix = matrix;
+//    }
+
+//    public static Lock getLock() {
+//        return lock;
 //    }
 //
-//    public static void write(int row, int column){
-//        matrix[row][column] = "W";
-//    }
-//
-//    public static void change(int row, int column){
-//        matrix[row][column] = "allow";
+//    public static void setLock(Lock lock) {
+//        AccessMatrix.lock = lock;
 //    }
 }
 
