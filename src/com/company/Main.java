@@ -1,13 +1,18 @@
 package com.company;
 
+import sun.awt.image.ImageWatched;
+
+import javax.swing.*;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static int fileRange;
+    static int domainRange;
+    static int domainID;
+    static Random rand = new Random();
 
-        RunList RL = new RunList();
-        RL.start();
+    public static void main(String[] args) {
 
         if (args.length == 0){
             System.out.println("Please enter a valid command.");
@@ -29,6 +34,7 @@ public class Main {
 
         else if (arg0.equals("m")){
             System.out.println("Execute command M");
+            runAL();
         }
 
         else if (arg0.equals("l")){
@@ -42,5 +48,30 @@ public class Main {
         else
             System.out.println("Please enter a valid command 4");
 
+    }
+
+    public static void runAL(){
+
+        fileRange = TtoS();
+        domainRange = TtoS();
+        LinkedList<AccessList> mainList = buildAL(fileRange, domainRange);
+
+        for (int i = 0; i < 5; i++){
+            RunList t1 = new RunList(mainList, fileRange, domainRange,i);
+            t1.start();
+
+        }
+    }
+
+    public static LinkedList<AccessList> buildAL(int fileRange, int domainRange){
+
+        LinkedList<AccessList> mainList = new LinkedList<>();
+
+        return mainList;
+
+    }
+
+    public static int TtoS(){
+        return rand.nextInt(5) + 3;
     }
 }
