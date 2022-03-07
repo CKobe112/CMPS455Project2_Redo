@@ -1,18 +1,25 @@
 package com.company;
 
-class MatrixInit extends AccessMatrix {
-    int yield;
+import java.util.concurrent.ThreadLocalRandom;
 
-    /**
-     * initializes the matrix with a header and now i need to randomly assign permissions to each domain
-     */
-    MatrixInit() {
-        domainRange = 1 + (int) (Math.random() * ((7 - 3) + 1));
-        objectsRange = 1 + (int) (Math.random() * ((7 - 3) + 1));
-        this.yield = 1 + (int) (Math.random() * ((7 - 3) + 1));
+class MatrixInit extends AccessMatrix {
+
+    MatrixInit(int domainRange) {
+        AccessMatrix.domainRange = domainRange;
+        domainRange = random.nextInt((7-3)+1)+3;
+        objectsRange = random.nextInt((7-3)+1)+3;
         charArray = new String[objectsRange];
         matrix = new String[domainRange][objectsRange + domainRange];
-
+        //final int threadNum = ThreadLocalRandom.current().nextInt(3,8);
+        /**
+         * set name of threads
+         */
+        for (int i = 0; i < domainRange; i++) {
+            Thread.currentThread().setName("Thread: " + threadNum);
+        }
+        /**
+         * initialize char array
+         */
         for (int i = 0; i < objectsRange; i++) {
             charArray[i] = write();
         }
@@ -30,6 +37,9 @@ class MatrixInit extends AccessMatrix {
         }
         System.out.println("    ");
 
+        /**
+         * initialize 2D array
+         */
         for (int i = 0; i < domainRange; i++) {
             for (int j = 0; j < domainRange + objectsRange; j++) {
                 matrix[i][j] = "";
@@ -86,6 +96,9 @@ class MatrixInit extends AccessMatrix {
 //        for (int i = 0; i < domain; i++) {
 //            matrix[i][0] = "D" + i;
 //        }
+        /**
+         * set random permissions and randomly allow for switching
+         */
         for (int i = 0; i < domainRange; i++) {
             for (int j = 0; j < domainRange + objectsRange; j++) {
                 if (j > domainRange) {
@@ -112,43 +125,73 @@ class MatrixInit extends AccessMatrix {
 
     @Override
     public void run() {
-//        int randomRow = 1 + (int) (Math.random() * ((7 - 3) + 1));
-//        int randomColumn = 1 + (int) (Math.random() * ((7 - 3) + 1);
-        int numRequests = 1 + (int) (Math.random() * ((10 - 5) + 1));
-        //while x = domain, reinitialize x
-        int randomNum = random.nextInt(domainRange + objectsRange);
-        if (randomNum <= objectsRange){
-            int operation = random.nextInt(2);
-            if ( operation ==0){
-                read();
-            }
-            else{
-                write();
-            }
+        //int randomRow = 1 + (int) (Math.random() * ((7 - 3) + 1));
+        //int randomColumn = 1 + (int) (Math.random() * ((7 - 3) + 1));
+        int numRequests = random.nextInt((10-5)+1)+5;
+        for (int i = 0; i < domainRange; i++) {
+            MatrixInit threads = new MatrixInit(i);
+            threads.start();
         }
-        //semaphore locks must be used to access objects properly
-        if (objectsRange < randomNum && randomNum <= objectsRange + domainRange){
-            while(randomNum == domainRange){
-                randomNum = random.nextInt(2);
+        for (int runs = 0; runs < numRequests; runs++) {
+            //randomNum is "X" from the project specs
+            int randomNum = random.nextInt((domainRange + objectsRange)+1);
+            if (randomNum <= objectsRange) {
+                int operation = random.nextInt(2);
+                if (operation == 0) {
+                    System.out.println(threadName() + " attempting to read resource: ");
+                    lock.lock();
+                    read();
+                    System.out.println(Thread.currentThread().getName() + " Yielding " + yield + " times");
+                    for (int i = 0; i < yield; i++) {
+                        Thread.yield();
+                    }
+                    lock.unlock();
+                    System.out.println(threadName() + " Operation complete");
+                } else {
+                    System.out.println(threadName() + " attempting to write to resource");
+                    lock.lock();
+                    write();
+                    System.out.println(threadName() + " Yielding " + yield + " times");
+                    for (int i = 0; i < yield; i++) {
+                        Thread.yield();
+                    }
+                    lock.unlock();
+                    System.out.println(threadName() + " Operation complete");
+                }
             }
-            //else
-            //switch to domain (domain + objects) - randomNum
-            if (matrix[getDomainRange()][getDomainRange() + getObjectsRange()].equals("A")){
-                //setDomain();
+            //semaphore locks must be used to access objects properly
+            if (objectsRange < randomNum && randomNum <= objectsRange + domainRange) {
+                while (randomNum == domainRange) {
+                    randomNum = random.nextInt(2);
+                }
+                //else
+                //switch to domain (domain + objects) - randomNum
+                lock.lock();
+                System.out.println(threadName() + " is trying to switch from .. to ..");
+                if (matrix[domainRange][objectsRange + domainRange].equals("A")) {
+                    System.out.println("Operation successful, switching to ..");
+                    //switch to the row needed
+                    setMatrixPosition(domainRange,objectsRange + domainRange);
+                    System.out.println(threadName() + " Yielding " + yield + " times");
+                    for (int i = 0; i < yield; i++) {
+                        Thread.yield();
+                    }
+                    lock.unlock();
+                    System.out.println(" Operation complete");
+                } else {
+                    System.out.println("Operation failed, permission denied");
+                }
             }
-
-
-        }
-
-        //System.out.println();
-        //System.out.println(randomRow);
-        //System.out.println(randomColumn);
+            //System.out.println();
+            //System.out.println(randomRow);
+            //System.out.println(randomColumn);
 //        for (int i = 0; i < yield; i++) {
 //            AccessMatrix.yield();
 //        }
 
 
-
+        }
+        System.out.println(numRequests);
 
     }
 }
