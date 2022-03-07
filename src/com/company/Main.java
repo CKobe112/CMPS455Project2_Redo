@@ -67,47 +67,25 @@ public class Main {
     public static LinkedList<AccessList> buildAL(int fileRange, int domainRange) {
 
         LinkedList<AccessList> mainList = new LinkedList<>();
+        AccessList internalList = new AccessList();
+        listHandler LB = new listHandler();
 
-        for (int i = 0; i < fileRange; i++) {
+        for (int i = 0; i < 1; i++){
+            System.out.println("Start list builder");
 
-            AccessList internalList = new AccessList();
+            LB.buildF(internalList, fileRange, domainRange);
+            System.out.println("Verification F");
+            for(int k = 0; k < internalList.getSize();k++)
+                System.out.print(internalList.getList(k)+" ");
 
-            System.out.println("start loop");
-            int current = fileRange;
-            System.out.println("current i: " + i + " current position: " + current);
-            int perms;
-            int prev = 0;
-            int j = 0;
-            System.out.println("current i: " + i + " current position: " + current);
+            LB.buildD(internalList, fileRange, domainRange);
+            System.out.println("Verification D");
+            for(int k = 0; k < internalList.getSize();k++)
+                System.out.print(internalList.getList(k)+" ");
 
-            while (current < fileRange + domainRange-1) {
-
-                current = current + rand.nextInt(domainRange);
-                if (current >= fileRange + domainRange)
-                    break;
-                if (current == prev)
-                    current++;
-                perms = rand.nextInt(3) + 1;
-                prev = current;
-
-                System.out.println("current j: " + j + " current position: " + current);
-
-                //if (current >= fileRange + domainRange)
-                //break;
-
-                internalList.addList(current);
-                internalList.addList(perms);
-                j++;
-                for (int k = 0; k < internalList.getSize(); k++)
-                    System.out.print(internalList.getList(k));
-                System.out.println();
-
-            }
-            mainList.add(internalList);
-            System.out.println("complete");
-
+            internalList.clearList();
         }
-        System.out.println("mainList complete");
+
         return mainList;
     }
 
