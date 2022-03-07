@@ -39,7 +39,7 @@ public class AccessList extends Thread{
         return this.LL.get(i);
     }
 
-    public int alSize(){
+    public int getSize(){
         return this.LL.size();
     }
 
