@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 public class listHandler {
@@ -35,8 +36,8 @@ public class listHandler {
             for(int k = 0; k < AL.getSize();k++)
                 System.out.print(AL.getList(k)+" ");
             System.out.println();
-            System.out.println("File Build Complete.");
         }
+        System.out.println("File Build Complete.");
     }
 
     public void buildD(AccessList AL, int fileRange, int domainRange){
@@ -60,8 +61,13 @@ public class listHandler {
             j++;
             for(int k = 0; k < AL.getSize();k++)
                 System.out.print(AL.getList(k)+" ");
+            System.out.println();
         }
         System.out.println("Domain Build Complete");
+    }
+
+    public void displayList(LinkedList<AccessList> mainList, int fileRange, int domainRange){
+
     }
 
 }

@@ -70,8 +70,8 @@ public class Main {
         AccessList internalList = new AccessList();
         listHandler LB = new listHandler();
 
-        for (int i = 0; i < 1; i++){
-            System.out.println("Start list builder");
+        for (int i = 0; i < fileRange + domainRange; i++){
+            System.out.println("Start list builder iteration: "+i);
 
             LB.buildF(internalList, fileRange, domainRange);
             System.out.println("Verification F");
@@ -83,6 +83,7 @@ public class Main {
             for(int k = 0; k < internalList.getSize();k++)
                 System.out.print(internalList.getList(k)+" ");
 
+            mainList.add(internalList);
             internalList.clearList();
         }
 

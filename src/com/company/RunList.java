@@ -23,7 +23,9 @@ public class RunList extends AccessList {
     public void run(){
 
         for(int i = 0; i < 5; i++)
-            System.out.println("This is a test run "+this.domainID);
+            System.out.println("This is a test run "+domainID);
+        for(int i = 0; i < 5; i++)
+            Thread.yield();
 
     }
 
