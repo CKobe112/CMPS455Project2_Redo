@@ -6,6 +6,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        RunList RL = new RunList();
+        RL.start();
+
         if (args.length == 0){
             System.out.println("Please enter a valid command.");
             System.exit(0);
