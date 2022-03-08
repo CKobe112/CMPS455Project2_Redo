@@ -44,22 +44,26 @@ public class listHandler {
         System.out.println();
     }
 
-    public void buildD(AccessList AL, int fileRange, int domainRange){
+    public void buildD(AccessList AL, int fileRange, int domainRange, int iteration){
 
         int current = 0;
-        int prev = -1;
+        int prev = iteration;
         int j = 0;
 
         while(current < domainRange){
 
             current = current + rand.nextInt(domainRange);
-            while(current == prev)
+            while(current == prev) {
+
+                System.out.println("Current: "+current+" Previous: "+prev);
                 current = current + rand.nextInt(domainRange);
+                System.out.println("Current: "+current+" Previous: "+prev);
+            }
             if (current >= domainRange)
                 break;
             prev = current;
 
-            //System.out.println("current j: "+j+" current position: "+current);
+            System.out.println("current j: "+j+" current position: "+current);
 
             AL.addDList(current);
             j++;
