@@ -64,8 +64,9 @@ public class DisplayCapList extends CapabilityList {
         boolean decision = false;
         int location = 99;
         int RW = rand.nextInt(2);
+        int pause;
 
-        System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): received size " + CL.getFileSize());
+        //System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): received size " + CL.getFileSize());
         if (RW == 0){
             System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): Attempting to read: F" + (output + 1));
         }
@@ -86,7 +87,7 @@ public class DisplayCapList extends CapabilityList {
             return;
         }
 
-        System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): received perm " + (CL.getFileList(location + 1) + " @ location " + location));
+        //System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): received perm " + (CL.getFileList(location + 1) + " @ location " + location));
 
         if(CL.getFileList(location + 1) == 1 && RW == 0)
             decision = true;
@@ -100,6 +101,13 @@ public class DisplayCapList extends CapabilityList {
             CL.getCap();
             Thread.yield();
             System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): File F" + (output + 1) + " contains the data: "+ CL.getData());
+
+            pause = TtoS();
+            System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): yielding for " + pause + " cycles.");
+            for(int i = 0; i < pause; i++){
+                Thread.yield();
+            }
+
             CL.releaseCap();
             Thread.yield();
 
@@ -112,6 +120,13 @@ public class DisplayCapList extends CapabilityList {
             String newData = randomData[rand.nextInt(11)];
             CL.setData(newData);
             System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): File F" + (output + 1) + " written to with the data: " + newData);
+
+            pause = TtoS();
+            System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): yielding for " + pause + " cycles.");
+            for(int i = 0; i < pause; i++){
+                Thread.yield();
+            }
+
             CL.releaseCap();
             Thread.yield();
 
