@@ -12,7 +12,7 @@ public class Main {
     static int domainID;
     static Random rand = new Random();
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
 
         if (args.length == 0){
             System.out.println("Please enter a valid command.");
@@ -50,7 +50,7 @@ public class Main {
 
     }
 
-    public static void runAL(){
+    public static void runAL() throws InterruptedException {
 
         fileRange = TtoS();
         domainRange = TtoS();
@@ -62,7 +62,7 @@ public class Main {
 
         LB.displayList(mainList, fileRange, domainRange);
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < domainRange; i++){
             RunList t1 = new RunList(mainList, fileRange, domainRange,i, i);
             t1.setName(String.valueOf(i));
             t1.start();
@@ -78,7 +78,7 @@ public class Main {
         for (int i = 0; i < fileRange + domainRange; i++) {
 
             AccessList internalList = new AccessList();
-            System.out.println("Start file builder iteration: " + i);
+            //System.out.println("Start file builder iteration: " + i);
             LB.buildF(internalList, fileRange, domainRange);
             LB.buildD(internalList, fileRange, domainRange, mainList.size());
             mainList.add(internalList);

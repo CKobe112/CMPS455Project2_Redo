@@ -40,7 +40,7 @@ public class listHandler {
             System.out.println();
         }
         AL.setData(randomData[rand.nextInt(11)]);
-        System.out.println("File Build Complete.");
+        //System.out.println("File Build Complete.");
         System.out.println();
     }
 
@@ -53,12 +53,9 @@ public class listHandler {
         while(current < domainRange){
 
             current = current + rand.nextInt(domainRange);
-            while(current == prev) {
-
-                System.out.println("Current: "+current+" Previous: "+prev);
+            while(current == prev)
                 current = current + rand.nextInt(domainRange);
-                System.out.println("Current: "+current+" Previous: "+prev);
-            }
+
             if (current >= domainRange)
                 break;
             prev = current;
