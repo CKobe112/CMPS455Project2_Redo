@@ -3,6 +3,7 @@ package com.company;
 import java.util.LinkedList;
 import java.util.Random;
 
+//begin code by Chris Kobe
 public class listHandler {
 
     Random rand = new Random();
@@ -35,13 +36,8 @@ public class listHandler {
             AL.addFList(current);
             AL.addFList(perms);
             j++;
-            for(int k = 0; k < AL.getFSize();k++)
-                System.out.print(AL.getFList(k)+" ");
-            System.out.println();
         }
         AL.setData(randomData[rand.nextInt(11)]);
-        //System.out.println("File Build Complete.");
-        System.out.println();
     }
 
     public void buildD(AccessList AL, int fileRange, int domainRange, int iteration){
@@ -60,15 +56,8 @@ public class listHandler {
                 break;
             prev = current;
 
-            System.out.println("current j: "+j+" current position: "+current);
-
             AL.addDList(current);
-            j++;
-            for(int k = 0; k < AL.getDSize();k++)
-                System.out.print(AL.getDList(k)+" ");
-            System.out.println();
         }
-        System.out.println("Domain Build Complete");
     }
 
     public void displayList(LinkedList<AccessList> mainList, int fileRange, int domainRange){
@@ -111,4 +100,4 @@ public class listHandler {
     }
 
 }
-
+//end code by Chris Kobe

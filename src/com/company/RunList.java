@@ -1,8 +1,8 @@
 package com.company;
 
-import sun.awt.image.ImageWatched;
-
 import java.util.*;
+
+//begin code by Chris Kobe
 
 public class RunList extends AccessList {
 
@@ -27,7 +27,7 @@ public class RunList extends AccessList {
 
         Thread.yield();
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < rand.nextInt(15)+5; i++){
 
             int op = rand.nextInt(fileRange+domainRange);
 
@@ -39,20 +39,21 @@ public class RunList extends AccessList {
                     e.printStackTrace();
                 }
             }
-            Thread.yield();
 
             if (op >= fileRange && op < (fileRange + domainRange)) {
-                while ((fileRange + domainRange - op) == domainID && op < domainRange) {
+                while ((fileRange + domainRange - op) == domainID && op > domainRange) {
                     op = rand.nextInt(fileRange + domainRange);
                 }
                 op = (fileRange + domainRange) - op;
+                if(op >= domainRange)
+                    op = rand.nextInt(domainRange);
+
                 try {
                     domainSwitch(mainList.get(op), op, domainID, threadID);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            Thread.yield();
         }
 
         System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Operation complete.");
@@ -64,8 +65,8 @@ public class RunList extends AccessList {
         boolean decision = false;
         int location = 99;
         int RW = rand.nextInt(2);
+        int halt;
 
-        System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): received size "+AL.getFSize());
         if (RW == 0){
             System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Attempting to read: F"+(op + 1));
         }
@@ -86,8 +87,6 @@ public class RunList extends AccessList {
             return;
         }
 
-        System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): received perm "+(AL.getFList(location + 1)+"@ location "+location));
-
         if(AL.getFList(location + 1) == 1 && RW == 0)
             decision = true;
         else if(AL.getFList(location + 1) == 2 && RW == 1)
@@ -99,7 +98,14 @@ public class RunList extends AccessList {
 
             AL.getSem();
             Thread.yield();
-            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): File F"+(op+1)+" contains the data:"+AL.getData());
+            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): File F"+(op+1)+" contains the data: "+AL.getData());
+
+            halt = TtoS();
+            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): yielding for "+halt+" cycles.");
+            for(int i = 0; i < halt; i++){
+                Thread.yield();
+            }
+
             AL.releaseSem();
             Thread.yield();
 
@@ -112,6 +118,13 @@ public class RunList extends AccessList {
             String newData = randomData[rand.nextInt(11)];
             AL.setData(newData);
             System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): File F"+(op+1)+" written to with the data: "+newData);
+
+            halt = TtoS();
+            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): yielding for "+halt+" cycles.");
+            for(int i = 0; i < halt; i++){
+                Thread.yield();
+            }
+
             AL.releaseSem();
             Thread.yield();
 
@@ -126,9 +139,10 @@ public class RunList extends AccessList {
 
     public void domainSwitch(AccessList AL, int target, int domainID, int threadID) throws InterruptedException {
 
-        System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Attempting to switch to Domain "+(target)+".");
+        System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Attempting to switch to Domain "+(target + 1)+".");
 
         boolean decision = false;
+        int halt;
 
         for (int i = 0; i < AL.getDSize(); i++){
             if(domainID == AL.getDList(i)){
@@ -139,14 +153,22 @@ public class RunList extends AccessList {
         if(decision){
             AL.getSem();
             Thread.yield();
-            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Operation successful, switching to Domain "+target+".");
-            this.domainID = target - 1;
-            Thread.yield();
+            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Operation successful, switching to Domain "+(target + 1)+".");
+            this.domainID = target;
+
+            halt = TtoS();
+            System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): yielding for "+halt+" cycles.");
+            for(int i = 0; i < halt; i++){
+                Thread.yield();
+            }
+
             AL.releaseSem();
+            Thread.yield();
         }
 
         if(!decision){
             System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Operation failed, Domain access denied.");
+            Thread.yield();
         }
 
     }
@@ -159,7 +181,7 @@ public class RunList extends AccessList {
         return rand.nextInt(5) + 3;
     }
 }
-
+//end code by Chris Kobe
 
 
 

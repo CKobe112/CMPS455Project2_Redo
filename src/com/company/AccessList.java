@@ -1,16 +1,15 @@
 package com.company;
 
-import sun.awt.image.ImageWatched;
-
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+//begin code by Chris Kobe
 public class AccessList extends Thread{
 
     public Semaphore sem = new Semaphore(1);
     public LinkedList<Integer> FL;
     public LinkedList<Integer> DL;
-    String data = "";
+    String data;
 
     public AccessList(){
         Semaphore sem1 = sem;
@@ -67,3 +66,4 @@ public class AccessList extends Thread{
     }
 
 }
+//end code by Chris Kobe
