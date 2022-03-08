@@ -50,13 +50,13 @@ public class CapListHndlr {
 
             int k = 0;
             while(k < mainCapList.get(k).getFileSize()) {
-                System.out.print("F" + (mainCapList.get(i).getFileList(k) + 1) + ":" + permissions(mainCapList.get(i).getFileList(k + 1)) + " ");
+                System.out.print("F" + (mainCapList.get(i).getFileList(k) + 1) + ":" + permissions(mainCapList.get(i).getFileList(k + 1)) + ", ");
                 k += 2;
             }
 
             for (int l = 0; l < fileRange; l++) {
                 int j = 0;
-                while(j < mainCapList.get(i).getDomainSize()){
+                while(j < mainCapList.get(l).getDomainSize()){
                     System.out.print("D" + (mainCapList.get(l).getDomainList(j) + 1) + ":access, ");
                     j++;
                 }

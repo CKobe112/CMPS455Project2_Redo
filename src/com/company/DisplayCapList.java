@@ -99,7 +99,7 @@ public class DisplayCapList extends CapabilityList {
 
             CL.getCap();
             Thread.yield();
-            System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): File F" + (output + 1) + " contains the data:"+ CL.getData());
+            System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): File F" + (output + 1) + " contains the data: "+ CL.getData());
             CL.releaseCap();
             Thread.yield();
 
