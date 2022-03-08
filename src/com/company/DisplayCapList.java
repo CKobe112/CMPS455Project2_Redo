@@ -1,8 +1,6 @@
-//Beginning of code written by Chris Kobe, and edited by Spencer Vosloh
+//Beginning of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List
 
 package com.company;
-
-import sun.awt.image.ImageWatched;
 
 import java.util.*;
 
@@ -153,4 +151,4 @@ public class DisplayCapList extends CapabilityList {
     }
 }
 
-//End of code written by Chris Kobe, and edited by Spencer Vosloh
+//End of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List

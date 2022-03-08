@@ -43,6 +43,7 @@ public class Main {
 
         else if (arg0.equals("c")){
             System.out.println("Execute command C");
+            runCL();
         }
 
         else
@@ -90,4 +91,40 @@ public class Main {
     public static int TtoS(){
         return rand.nextInt(5) + 3;
     }
+
+    //Beginning of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List
+
+    public static void runCL() throws InterruptedException {
+
+        domainRange = TtoS();
+        fileRange = TtoS();
+        System.out.println("Domain Count: " + domainRange);
+        System.out.println("Object Count: " + fileRange);
+        LinkedList<CapabilityList> mainCapList = buildCL(domainRange, fileRange);
+        CapListHndlr LB = new CapListHndlr();
+
+        LB.displayList(mainCapList, fileRange, domainRange);
+
+        for (int i = 0; i < domainRange; i++){
+            DisplayCapList t1 = new DisplayCapList(mainCapList, domainRange, fileRange,i, i);
+            t1.setName(String.valueOf(i));
+            t1.start();
+
+        }
+    }
+
+    public static LinkedList<CapabilityList> buildCL(int domainRange, int fileRange) {
+
+        LinkedList<CapabilityList> mainCapList = new LinkedList<>();
+        CapListHndlr LB = new CapListHndlr();
+
+        for (int i = 0; i < domainRange + fileRange; i++) {
+
+            CapabilityList internalList = new CapabilityList();
+            LB.buildFile(internalList, fileRange, domainRange);
+            mainCapList.add(internalList);
+        }
+        return mainCapList;
+    }
 }
+//End of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List

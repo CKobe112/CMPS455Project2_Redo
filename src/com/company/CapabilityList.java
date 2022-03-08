@@ -1,8 +1,6 @@
-//Beginning of code written by Chris Kobe, and edited by Spencer Vosloh
+//Beginning of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List
 
 package com.company;
-
-import sun.awt.image.ImageWatched;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -15,7 +13,6 @@ public class CapabilityList extends Thread{
     String data = "";
 
     public CapabilityList(){
-        Semaphore cap1 = cap;
         FileList = new LinkedList<>();
         DomainList = new LinkedList<>();
         this.data = "";
@@ -49,13 +46,6 @@ public class CapabilityList extends Thread{
         return this.FileList.size();
     }
 
-    public void clearFileList() {
-        this.DomainList.clear();
-    }
-    public void addDomainList(int i){
-        this.DomainList.add(i);
-    }
-
     public int getDomainList(int i){
         return this.DomainList.get(i);
     }
@@ -63,11 +53,6 @@ public class CapabilityList extends Thread{
     public int getDomainSize(){
         return this.DomainList.size();
     }
-
-    public void clearDomainList() {
-        this.DomainList.clear();
-    }
-
 }
 
-//End of code written by Chris Kobe, and edited by Spencer Vosloh
+//End of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List
