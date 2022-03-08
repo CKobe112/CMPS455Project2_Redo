@@ -9,9 +9,9 @@ class MatrixInit extends AccessMatrix {
         objectsRange = random.nextInt((7-3)+1)+3;
         charArray = new String[objectsRange];
         matrix = new String[domainRange][objectsRange + domainRange];
-        lock = new ReentrantLock[domainRange + objectsRange];
+        lock = new ReentrantLock[objectsRange];
         //final int threadNum = ThreadLocalRandom.current().nextInt(3,8);
-        for (int i = 0; i < domainRange + objectsRange;i++) {
+        for (int i = 0; i < objectsRange;i++) {
             lock[i] = new ReentrantLock();
         }
 
