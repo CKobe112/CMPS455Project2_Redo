@@ -23,6 +23,7 @@ public class RunList extends AccessList {
         this.threadID = threadID;
     }
 
+    //runnable thread that does all the work
     public void run() {
 
         Thread.yield();
@@ -40,6 +41,7 @@ public class RunList extends AccessList {
                 }
             }
 
+            //nightmare logic to keep domain switching from trying to read OOB indexes
             if (op >= fileRange && op < (fileRange + domainRange)) {
                 while ((fileRange + domainRange - op) == domainID && op > domainRange) {
                     op = rand.nextInt(fileRange + domainRange);
@@ -60,6 +62,7 @@ public class RunList extends AccessList {
 
     }
 
+    //arbitrator function for file read write
     public void readWrite(AccessList AL, int op, int domainID, int threadID) throws InterruptedException {
 
         boolean decision = false;
@@ -137,6 +140,7 @@ public class RunList extends AccessList {
 
     }
 
+    //arbitrator function for domain switching
     public void domainSwitch(AccessList AL, int target, int domainID, int threadID) throws InterruptedException {
 
         System.out.println("Thread #"+threadID+"(D"+(domainID+1)+"): Attempting to switch to Domain "+(target + 1)+".");
@@ -171,10 +175,6 @@ public class RunList extends AccessList {
             Thread.yield();
         }
 
-    }
-
-    public void output(int threadID, int domainID){
-        System.out.print("Thread #"+threadID+"(D"+(domainID+1)+"):");
     }
 
     public int TtoS(){

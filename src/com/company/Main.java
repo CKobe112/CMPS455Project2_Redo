@@ -1,8 +1,5 @@
 package com.company;
 
-import sun.awt.image.ImageWatched;
-
-import javax.swing.*;
 import java.util.*;
 
 public class Main {
@@ -10,7 +7,6 @@ public class Main {
     //begin code by Chris Kobe
     static int fileRange;
     static int domainRange;
-    static int domainID;
     static Random rand = new Random();
 
     public static void main(String[] args){
@@ -54,6 +50,9 @@ public class Main {
     //end code by Chris Kobe
 
     //begin code by Chris Kobe
+
+    //sets ranges then passes information and list to threads
+    //number of threads is based off of domain range
     public static void runAL(){
 
         fileRange = TtoS();
@@ -74,6 +73,7 @@ public class Main {
         }
     }
 
+    //builds the list using the listHandler class
     public static LinkedList<AccessList> buildAL(int fileRange, int domainRange) {
 
         LinkedList<AccessList> mainList = new LinkedList<>();

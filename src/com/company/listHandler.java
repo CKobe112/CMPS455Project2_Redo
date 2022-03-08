@@ -10,6 +10,7 @@ public class listHandler {
     String[] randomData = {"Peter", "John", "James", "Andrew", "Philip", "Thomas",
                             "Bartholomew", "Matthew", "Simon", "Judas", "Matthias"}; //11 entries
 
+    //build the file list in an AccessList object
     public void buildF(AccessList AL, int fileRange, int domainRange){
 
         int current;
@@ -40,6 +41,7 @@ public class listHandler {
         AL.setData(randomData[rand.nextInt(11)]);
     }
 
+    //build the domain list in an AccessList object
     public void buildD(AccessList AL, int fileRange, int domainRange, int iteration){
 
         int current = 0;
@@ -60,6 +62,7 @@ public class listHandler {
         }
     }
 
+    //displays the permissions for file access and domain access
     public void displayList(LinkedList<AccessList> mainList, int fileRange, int domainRange){
 
         for (int i = 0; i < fileRange; i++){
