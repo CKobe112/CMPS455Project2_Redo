@@ -3,12 +3,14 @@ package com.company;
 import java.util.LinkedList;
 import java.util.Random;
 
+//begin code by Chris Kobe
 public class listHandler {
 
     Random rand = new Random();
     String[] randomData = {"Peter", "John", "James", "Andrew", "Philip", "Thomas",
                             "Bartholomew", "Matthew", "Simon", "Judas", "Matthias"}; //11 entries
 
+    //build the file list in an AccessList object
     public void buildF(AccessList AL, int fileRange, int domainRange){
 
         int current;
@@ -35,15 +37,11 @@ public class listHandler {
             AL.addFList(current);
             AL.addFList(perms);
             j++;
-            for(int k = 0; k < AL.getFSize();k++)
-                System.out.print(AL.getFList(k)+" ");
-            System.out.println();
         }
         AL.setData(randomData[rand.nextInt(11)]);
-        //System.out.println("File Build Complete.");
-        System.out.println();
     }
 
+    //build the domain list in an AccessList object
     public void buildD(AccessList AL, int fileRange, int domainRange, int iteration){
 
         int current = 0;
@@ -60,17 +58,11 @@ public class listHandler {
                 break;
             prev = current;
 
-            System.out.println("current j: "+j+" current position: "+current);
-
             AL.addDList(current);
-            j++;
-            for(int k = 0; k < AL.getDSize();k++)
-                System.out.print(AL.getDList(k)+" ");
-            System.out.println();
         }
-        System.out.println("Domain Build Complete");
     }
 
+    //displays the permissions for file access and domain access
     public void displayList(LinkedList<AccessList> mainList, int fileRange, int domainRange){
 
         for (int i = 0; i < fileRange; i++){
@@ -111,4 +103,4 @@ public class listHandler {
     }
 
 }
-
+//end code by Chris Kobe
