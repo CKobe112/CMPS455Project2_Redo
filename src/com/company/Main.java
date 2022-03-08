@@ -1,8 +1,16 @@
 package com.company;
 
+import sun.awt.image.ImageWatched;
+
+import javax.swing.*;
 import java.util.*;
 
 public class Main {
+
+    static int fileRange;
+    static int domainRange;
+    static int domainID;
+    static Random rand = new Random();
 
     public static void main(String[] args) {
 
@@ -26,6 +34,7 @@ public class Main {
 
         else if (arg0.equals("m")){
             System.out.println("Execute command M");
+            runAL();
         }
 
         else if (arg0.equals("l")){
@@ -39,5 +48,58 @@ public class Main {
         else
             System.out.println("Please enter a valid command 4");
 
+    }
+
+    public static void runAL(){
+
+        fileRange = TtoS();
+        domainRange = TtoS();
+        System.out.println("fileRange: "+fileRange+" domainRange: "+domainRange);
+        LinkedList<AccessList> mainList = buildAL(fileRange, domainRange);
+        listHandler LB = new listHandler();
+
+        System.out.println("Dsize: "+mainList.get(0).getDSize());
+
+        LB.displayList(mainList, fileRange, domainRange);
+
+        //for (int i = 0; i < 5; i++){
+            //RunList t1 = new RunList(mainList, fileRange, domainRange,i);
+            //t1.start();
+
+        //}
+    }
+
+    public static LinkedList<AccessList> buildAL(int fileRange, int domainRange) {
+
+        LinkedList<AccessList> mainList = new LinkedList<>();
+        listHandler LB = new listHandler();
+
+        for (int i = 0; i < fileRange + domainRange; i++) {
+
+            AccessList internalList = new AccessList();
+            System.out.println("Start file builder iteration: " + i);
+
+            System.out.println();
+            LB.buildF(internalList, fileRange, domainRange);
+            System.out.println("Verification F");
+            for (int k = 0; k < internalList.getFSize(); k++)
+                System.out.print(internalList.getFList(k) + " ");
+            System.out.println(internalList.getData());
+            System.out.println();
+
+            LB.buildD(internalList, fileRange, domainRange);
+            System.out.println("Verification D");
+            for(int k = 0; k < internalList.getDSize();k++)
+                System.out.print(internalList.getDList(k)+" ");
+            System.out.println();
+
+            mainList.add(internalList);
+
+        }
+        return mainList;
+    }
+
+    public static int TtoS(){
+        return rand.nextInt(5) + 3;
     }
 }
