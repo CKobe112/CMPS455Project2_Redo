@@ -38,7 +38,7 @@ public class DisplayCapList extends CapabilityList {
                     e.printStackTrace();
                 }
             }
-            Thread.yield();
+            //Thread.yield();
 
             //Switch Domain
             if (output >= fileRange && output < (fileRange + domainRange)) {
@@ -52,7 +52,7 @@ public class DisplayCapList extends CapabilityList {
                     e.printStackTrace();
                 }
             }
-            Thread.yield();
+            //Thread.yield();
         }
 
         System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): Operation complete.");
@@ -129,6 +129,7 @@ public class DisplayCapList extends CapabilityList {
         System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): Attempting to switch to Domain " + (target) + ".");
 
         boolean decision = false;
+        int pause;
 
         for (int i = 0; i < CL.getDomainSize(); i++){
             if(domainID == CL.getDomainList(i)){
@@ -141,13 +142,24 @@ public class DisplayCapList extends CapabilityList {
             Thread.yield();
             System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): Operation successful, switching to Domain " + target + ".");
             this.domainID = target - 1;
+
+            pause = TtoS();
+            System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): yielding for " + pause + " cycles.");
+            for(int i = 0; i < pause; i++){
+                Thread.yield();
+            }
             Thread.yield();
             CL.releaseCap();
         }
 
         if(!decision){
             System.out.println("Thread #" + threadID + "(D" + (domainID + 1) + "): Operation failed, Domain access denied.");
+            Thread.yield();
         }
+    }
+
+    public int TtoS(){
+        return rand.nextInt(5) + 3;
     }
 }
 
