@@ -1,28 +1,29 @@
+//Begin code changes by Austin Mestayer
+
 package com.company;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Arbitrator extends MatrixThread {
-    static int randomRow = ThreadLocalRandom.current().nextInt(domainRange);
-
     Arbitrator(int tid) {
         super(tid);
     }
+    
+    public static Boolean checkSwitch(int row, int column){
+        return matrix[row][column].equals("A  ");
+    }
 
-    public static Boolean checkSwitch(){
-        return matrix[randomRow][CurrentDomain].equals("A  ");
-    }
-    public static Boolean checkReadPerm(){
-        if (matrix[randomRow][CurrentDomain].equals("R  ")){
+    public static Boolean checkReadPerm(int row, int column){
+        if (matrix[row][column].equals("R  ")){
             return true;
         }
-        else return matrix[randomRow][CurrentDomain].equals("R/W");
+        else return matrix[row][column].equals("R/W");
     }
-    public static Boolean checkWritePerm(){
-        if(matrix[randomRow][CurrentDomain].equals("R/W")){
+
+    public static Boolean checkWritePerm(int row, int column){
+        if(matrix[row][column].equals("R/W")){
             return true;
         }
-        else return matrix[randomRow][CurrentDomain].equals("W  ");
+        else return matrix[row][column].equals("W  ");
     }
 
 }
+//End Code Changes by Austin Mestayer
