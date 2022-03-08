@@ -40,14 +40,14 @@ public class listHandler {
             System.out.println();
         }
         AL.setData(randomData[rand.nextInt(11)]);
-        System.out.println("File Build Complete.");
+        //System.out.println("File Build Complete.");
         System.out.println();
     }
 
-    public void buildD(AccessList AL, int fileRange, int domainRange){
+    public void buildD(AccessList AL, int fileRange, int domainRange, int iteration){
 
         int current = 0;
-        int prev = -1;
+        int prev = iteration;
         int j = 0;
 
         while(current < domainRange){
@@ -55,11 +55,12 @@ public class listHandler {
             current = current + rand.nextInt(domainRange);
             while(current == prev)
                 current = current + rand.nextInt(domainRange);
+
             if (current >= domainRange)
                 break;
             prev = current;
 
-            //System.out.println("current j: "+j+" current position: "+current);
+            System.out.println("current j: "+j+" current position: "+current);
 
             AL.addDList(current);
             j++;
