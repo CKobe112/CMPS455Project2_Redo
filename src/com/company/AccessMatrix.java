@@ -3,7 +3,6 @@ package com.company;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Construct an access matrix with permission for each object based on the domain
@@ -15,48 +14,41 @@ public class AccessMatrix extends Thread {
     static int domain;
     static int column;
     static String[][] matrix;
-    static Lock lock = new ReentrantLock();
+    static Lock[] lock;
     static Random random = new Random();
     static String[] charArray;
     static final int threadNum = ThreadLocalRandom.current().nextInt(3,8);
-    int yield = ThreadLocalRandom.current().nextInt(3,8);
+
 
     public static String randomDomain(){
         int r = random.nextInt(2);
         if (r==0){
-            return "A";
+            return "A  ";
         }
         else{
-            return "N";
+            return "N  ";
         }
     }
     public static String randomPermission(){
         int r = random.nextInt(3);
         if (r==0){
-            return "R";
+            return "R  ";
         }
         else if (r==1){
-            return "W";
+            return "W  ";
         }
         else {
             return "R/W";
         }
 
     }
-    public static String threadName(){
-        return Thread.currentThread().getName();
-    }
 
 
-
-
-
-    public void read(){
-        //need to change to actual file number, but this is a temp solution
-        int charPosition = random.nextInt(objectsRange);
-        System.out.println(Thread.currentThread().getName() + " resource contains " + charArray[(int) Thread.currentThread().getId()]);
-    }
-    public String write(){
+//    public void read(){
+//        //need to change to actual file number, but this is a temp solution
+//        System.out.println(Thread.currentThread().getName() + " resource contains " + charArray[random.nextInt(objectsRange)]);
+//    }
+    public String writeArray(){
         int randomString = random.nextInt(6);
         if(randomString == 0){
             return "Green";
