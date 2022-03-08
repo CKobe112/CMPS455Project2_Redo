@@ -1,3 +1,5 @@
+//Begin code changes by Austin Mestayer
+
 package com.company;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +27,7 @@ class MatrixInit extends AccessMatrix {
         /**
          * initialize 2D array
          */
-        for (int i = 0; i < domainRange; i++) {
+        for (int i = 0; i < 1; i++) {
             for (int j = 0; j < domainRange + objectsRange; j++) {
                 matrix[i][j] = "";
             }
@@ -71,7 +73,9 @@ class MatrixInit extends AccessMatrix {
     public void run() {
         for (int i = 0; i < domainRange; i++) {
             MatrixThread threads = new MatrixThread(i);
+            threads.setName("[Thread: " + MatrixThread.getTid() + "(D"+ (MatrixThread.getCurrentDomain() - objectsRange) + ")]");
             threads.start();
         }
     }
 }
+//End Code Changes by Austin Mestayer
