@@ -8,10 +8,13 @@ public class MatrixThread extends AccessMatrix {
     int numRequests = random.nextInt((10-5)+1)+5;
     int yield;
     int CurrentDomain;
+    int randomObject;
     MatrixThread(int tid) {
         MatrixThread.tid = tid;
         threadName = ThreadLocalRandom.current().nextInt(3, 8);
         yield = ThreadLocalRandom.current().nextInt(3,8);
+        randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
+
         for (int i = 0; i < domainRange; i++) {
             Thread.currentThread().setName("Thread-" + tid);
         }
@@ -29,27 +32,27 @@ public class MatrixThread extends AccessMatrix {
     }
     public void read(){
         //need to change to actual file number, but this is a temp solution
-        System.out.println(Thread.currentThread().getName() + " resource contains " + charArray[random.nextInt(objectsRange)]);
+        System.out.println(threadName() + " resource contains " + charArray[random.nextInt(objectsRange)]);
     }
     public void write(){
         int randomString = random.nextInt(6);
         if(randomString == 0){
-            System.out.println("Thread-"+tid + " writes 'Green' to resource F" + tid);
+            System.out.println(threadName()+ " writes 'Green' to resource F" + randomObject);
         }
         else if(randomString == 1){
-            System.out.println("Thread-"+tid + " writes 'Red' to resource F" + tid);
+            System.out.println(threadName() + " writes 'Red' to resource F" + randomObject);
         }
         else if(randomString == 2){
-            System.out.println("Thread-"+tid + " writes 'Yellow' to resource F" + tid);
+            System.out.println(threadName() + " writes 'Yellow' to resource F" + randomObject);
         }
         else if(randomString == 3){
-            System.out.println("Thread-"+tid + " writes 'Blue' to resource F" + tid);
+            System.out.println(threadName() + " writes 'Blue' to resource F" + randomObject);
         }
         else if(randomString == 4){
-            System.out.println("Thread-"+tid + " writes 'Purple' to resource F" + tid);
+            System.out.println(threadName() + " writes 'Purple' to resource F" + randomObject);
         }
         else {
-            System.out.println("Thread-"+tid + " writes 'Rainbow' to resource F" + tid);
+            System.out.println(threadName() + " writes 'Rainbow' to resource F" + randomObject);
 
         }
     }
@@ -60,7 +63,6 @@ public class MatrixThread extends AccessMatrix {
         for (int runs = 0; runs < numRequests; runs++) {
             //randomNum is "X" from the project specs
             int randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
-            int randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
             int swap = (domainRange+objectsRange)-randomNum;
             if (randomNum <= objectsRange) {
                 //generate another number between 0 and 1
@@ -68,7 +70,7 @@ public class MatrixThread extends AccessMatrix {
                 int operation = random.nextInt(2);
                 if (operation == 0) {
                     lock[randomObject].lock();
-                    System.out.println(threadName() + " attempting to read resource F" + randomNum);
+                    System.out.println(threadName() + " attempting to read resource F" + randomObject);
                     read();
                     System.out.println(Thread.currentThread().getName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
@@ -79,7 +81,7 @@ public class MatrixThread extends AccessMatrix {
                 }
                 else {
                     lock[randomObject].lock();
-                    System.out.println(threadName() + " attempting to write to resource F" + randomNum);
+                    System.out.println(threadName() + " attempting to write to resource F" + randomObject);
                     write();
                     System.out.println(threadName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
