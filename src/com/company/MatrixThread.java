@@ -7,18 +7,21 @@ public class MatrixThread extends AccessMatrix {
     int threadName;
     int numRequests = random.nextInt((10-5)+1)+5;
     int yield;
-    int CurrentDomain;
+    static int CurrentDomain;
     int randomObject;
     MatrixThread(int tid) {
         MatrixThread.tid = tid;
         threadName = ThreadLocalRandom.current().nextInt(3, 8);
         yield = ThreadLocalRandom.current().nextInt(3,8);
         randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
+        //keeps track of domains on end of matrix, meaning tid + objectsRange would give use the positions after the objects
+        CurrentDomain = tid + objectsRange;
+        //need to initialize each thread to a domain from start
 
         for (int i = 0; i < domainRange; i++) {
             Thread.currentThread().setName("Thread-" + tid);
         }
-        this.CurrentDomain=tid+objectsRange;
+
     }
 
     public static int getTid() {
@@ -27,9 +30,7 @@ public class MatrixThread extends AccessMatrix {
     public static String threadName(){
         return Thread.currentThread().getName();
     }
-    int getCurrentDomain() {
-        return CurrentDomain;
-    }
+
     public void read(){
         //need to change to actual file number, but this is a temp solution
         System.out.println(threadName() + " resource contains " + charArray[random.nextInt(objectsRange)]);
@@ -63,64 +64,105 @@ public class MatrixThread extends AccessMatrix {
         for (int runs = 0; runs < numRequests; runs++) {
             //randomNum is "X" from the project specs
             int randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
-            int swap = (domainRange+objectsRange)-randomNum;
+            //domain we need to switch to when requested
+            //do not want to check for columns that are before the domains
+//            while (swap < objectsRange){
+//                randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
+//                swap = CurrentDomain - randomNum;
+//            }
+
             if (randomNum <= objectsRange) {
                 //generate another number between 0 and 1
-                randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange)+1);
+                randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
                 int operation = random.nextInt(2);
+
                 if (operation == 0) {
                     lock[randomObject].lock();
                     System.out.println(threadName() + " attempting to read resource F" + randomObject);
-                    read();
-                    System.out.println(Thread.currentThread().getName() + " Yielding " + yield + " times");
-                    for (int i = 0; i < yield; i++) {
-                        Thread.yield();
+                    //check read rights
+                    if (Arbitrator.checkReadPerm()) {
+                        read();
+                        for (int i = 0; i < yield; i++) {
+                            MatrixThread.yield();
+                        }
                     }
+
+                    else{
+                        System.out.println(threadName() + " does not have right to read");
+                        for (int i = 0; i < yield; i++) {
+                            MatrixThread.yield();
+                        }
+                    }
+
+                    System.out.println(Thread.currentThread().getName() + " Yielding " + yield + " times");
+
                     lock[randomObject].unlock();
                     System.out.println(threadName() + " Operation complete");
                 }
                 else {
                     lock[randomObject].lock();
                     System.out.println(threadName() + " attempting to write to resource F" + randomObject);
-                    write();
-                    System.out.println(threadName() + " Yielding " + yield + " times");
-                    for (int i = 0; i < yield; i++) {
-                        Thread.yield();
+                    if(Arbitrator.checkWritePerm()) {
+                        write();
+                        for (int i = 0; i < yield; i++) {
+                            MatrixThread.yield();
+                        }
                     }
+                    else{
+                        System.out.println(threadName() + " does not have permission to write");
+                        for (int i = 0; i < yield; i++) {
+                            MatrixThread.yield();
+                        }
+                    }
+                    System.out.println(threadName() + " Yielding " + yield + " times");
+
+
                     System.out.println(threadName() + " Operation complete");
                     lock[randomObject].unlock();
                 }
             }
-            if (objectsRange < randomNum && randomNum <= (objectsRange + domainRange)) {
-                int randomRow = ThreadLocalRandom.current().nextInt(domainRange);
+            if (objectsRange < randomNum && randomNum <= (objectsRange + domainRange)) { //checking to see if parsing domains
+
                 int randomColumn = ThreadLocalRandom.current().nextInt(domainRange+objectsRange);
+
                 while (randomNum == CurrentDomain) {
-                    randomNum = ThreadLocalRandom.current().nextInt(domainRange);
+                    randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
                 }
+                randomNum = randomNum - objectsRange;
                 while(randomColumn <= objectsRange){
                     randomColumn = ThreadLocalRandom.current().nextInt(domainRange+objectsRange);
                 }
 
-                //else
-                System.out.println(threadName() + " is trying to switch from D" + CurrentDomain +" to D" + swap);
-                if (matrix[randomRow][CurrentDomain].equals("A  ")) {
+                System.out.println(threadName() + " is trying to switch from D" + tid +" to D" + randomNum);
+                //check if has permission to switch
+                if(Arbitrator.checkSwitch()) {
                     lock[randomObject].lock();
-                    System.out.println(threadName() + " Operation successful, switching to D"+swap);
-                    //switch to the row needed
-                    //setMatrixPosition(domainRange, objectsRange + domainRange);
+
+                    //set matrix position, i think swap should be equal to something else
+                    CurrentDomain = randomNum;
+                    System.out.println(threadName() + " Operation successful, switching to D" + randomNum);
+
                     System.out.println(threadName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
-                        Thread.yield();
+                        MatrixThread.yield();
                     }
+
+
                     System.out.println(threadName() + " Operation complete");
                     lock[randomObject].unlock();
-                } else {
+                }
+                else {
                     System.out.println(threadName() + " Operation failed, permission denied");
                     for (int i = 0; i < yield; i++) {
-                        Thread.yield();
+                        MatrixThread.yield();
+
                     }
                 }
             }
         }
     }
 }
+//write method is not working, perhaps need to assign domain to each thread
+//swapping position also not working, little confused
+// is this the correct way to implement random number of requests per thread
+//
