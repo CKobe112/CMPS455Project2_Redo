@@ -1,17 +1,21 @@
 package com.company;
 
+import sun.awt.image.ImageWatched;
+
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class AccessList extends Thread{
 
     public Semaphore sem = new Semaphore(1);
-    public LinkedList<Integer> LL;
+    public LinkedList<Integer> FL;
+    public LinkedList<Integer> DL;
     String data = "";
 
     public AccessList(){
         Semaphore sem1 = sem;
-        LL = new LinkedList<Integer>();
+        FL = new LinkedList<>();
+        DL = new LinkedList<>();
         this.data = "";
     }
 
@@ -31,20 +35,35 @@ public class AccessList extends Thread{
         this.sem.release();
     }
 
-    public void addList(int i){
-        this.LL.add(i);
+    public void addFList(int i){
+        this.FL.add(i);
     }
 
-    public int getList(int i){
-        return this.LL.get(i);
+    public int getFList(int i){
+        return this.FL.get(i);
     }
 
-    public int getSize(){
-        return this.LL.size();
+    public int getFSize(){
+        return this.FL.size();
     }
 
-    public void clearList() {
-        this.LL.clear();
+    public void clearFList() {
+        this.DL.clear();
+    }
+    public void addDList(int i){
+        this.DL.add(i);
+    }
+
+    public int getDList(int i){
+        return this.DL.get(i);
+    }
+
+    public int getDSize(){
+        return this.DL.size();
+    }
+
+    public void clearDList() {
+        this.DL.clear();
     }
 
 }

@@ -11,7 +11,6 @@ public class RunList extends AccessList {
     public int domainID;
     public LinkedList<AccessList> mainList;
     Random rand = new Random();
-    String[] randomData = {"Peter", "John", "James", "Andrew", "Philip", "Thomas", "Bartholomew", "Matthew", "Simon", "Judas", "Matthias"};
 
     public RunList(LinkedList<AccessList> mainList, int fileRange, int domainRange, int domainID){
         this.mainList = mainList;

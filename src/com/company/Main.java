@@ -56,37 +56,46 @@ public class Main {
         domainRange = TtoS();
         System.out.println("fileRange: "+fileRange+" domainRange: "+domainRange);
         LinkedList<AccessList> mainList = buildAL(fileRange, domainRange);
+        listHandler LB = new listHandler();
 
-        for (int i = 0; i < 5; i++){
-            RunList t1 = new RunList(mainList, fileRange, domainRange,i);
-            t1.start();
+        System.out.println("Dsize: "+mainList.get(0).getDSize());
 
-        }
+        LB.displayList(mainList, fileRange, domainRange);
+
+        //for (int i = 0; i < 5; i++){
+            //RunList t1 = new RunList(mainList, fileRange, domainRange,i);
+            //t1.start();
+
+        //}
     }
 
     public static LinkedList<AccessList> buildAL(int fileRange, int domainRange) {
 
         LinkedList<AccessList> mainList = new LinkedList<>();
-        AccessList internalList = new AccessList();
         listHandler LB = new listHandler();
 
-        for (int i = 0; i < fileRange + domainRange; i++){
-            System.out.println("Start list builder iteration: "+i);
+        for (int i = 0; i < fileRange + domainRange; i++) {
 
+            AccessList internalList = new AccessList();
+            System.out.println("Start file builder iteration: " + i);
+
+            System.out.println();
             LB.buildF(internalList, fileRange, domainRange);
             System.out.println("Verification F");
-            for(int k = 0; k < internalList.getSize();k++)
-                System.out.print(internalList.getList(k)+" ");
+            for (int k = 0; k < internalList.getFSize(); k++)
+                System.out.print(internalList.getFList(k) + " ");
+            System.out.println(internalList.getData());
+            System.out.println();
 
             LB.buildD(internalList, fileRange, domainRange);
             System.out.println("Verification D");
-            for(int k = 0; k < internalList.getSize();k++)
-                System.out.print(internalList.getList(k)+" ");
+            for(int k = 0; k < internalList.getDSize();k++)
+                System.out.print(internalList.getDList(k)+" ");
+            System.out.println();
 
             mainList.add(internalList);
-            internalList.clearList();
-        }
 
+        }
         return mainList;
     }
 
