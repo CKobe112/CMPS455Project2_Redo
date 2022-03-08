@@ -9,11 +9,11 @@ public class MatrixThread extends AccessMatrix {
     int yield;
     int CurrentDomain;
     MatrixThread(int tid) {
-        this.tid = tid;
+        MatrixThread.tid = tid;
         threadName = ThreadLocalRandom.current().nextInt(3, 8);
         yield = ThreadLocalRandom.current().nextInt(3,8);
         for (int i = 0; i < domainRange; i++) {
-            Thread.currentThread().setName("Thread: " + threadNum);
+            Thread.currentThread().setName("Thread-" + tid);
         }
         this.CurrentDomain=tid+objectsRange;
     }
@@ -34,22 +34,22 @@ public class MatrixThread extends AccessMatrix {
     public void write(){
         int randomString = random.nextInt(6);
         if(randomString == 0){
-            System.out.println("Thread-"+threadNum + " writes 'Green' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Green' to resource F" + tid);
         }
         else if(randomString == 1){
-            System.out.println("Thread-"+threadNum + " writes 'Red' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Red' to resource F" + tid);
         }
         else if(randomString == 2){
-            System.out.println("Thread-"+threadNum + " writes 'Yellow' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Yellow' to resource F" + tid);
         }
         else if(randomString == 3){
-            System.out.println("Thread-"+threadNum + " writes 'Blue' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Blue' to resource F" + tid);
         }
         else if(randomString == 4){
-            System.out.println("Thread-"+threadNum + " writes 'Purple' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Purple' to resource F" + tid);
         }
         else {
-            System.out.println("Thread-"+threadNum + " writes 'Rainbow' to resource F" + getCurrentDomain());
+            System.out.println("Thread-"+tid + " writes 'Rainbow' to resource F" + tid);
 
         }
     }
@@ -60,55 +60,63 @@ public class MatrixThread extends AccessMatrix {
         for (int runs = 0; runs < numRequests; runs++) {
             //randomNum is "X" from the project specs
             int randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange));
-
+            int randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
+            int swap = (domainRange+objectsRange)-randomNum;
             if (randomNum <= objectsRange) {
-
+                //generate another number between 0 and 1
+                randomNum = ThreadLocalRandom.current().nextInt((domainRange + objectsRange)+1);
                 int operation = random.nextInt(2);
                 if (operation == 0) {
-                    System.out.println(threadName() + " attempting to read resource: ");
-                    lock[randomNum].lock();
+                    lock[randomObject].lock();
+                    System.out.println(threadName() + " attempting to read resource F" + randomNum);
                     read();
                     System.out.println(Thread.currentThread().getName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
                         Thread.yield();
                     }
-                    lock[randomNum].unlock();
+                    lock[randomObject].unlock();
                     System.out.println(threadName() + " Operation complete");
                 }
                 else {
+                    lock[randomObject].lock();
                     System.out.println(threadName() + " attempting to write to resource F" + randomNum);
-                    lock[randomNum].lock();
                     write();
                     System.out.println(threadName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
                         Thread.yield();
                     }
-                    lock[randomNum].unlock();
                     System.out.println(threadName() + " Operation complete");
+                    lock[randomObject].unlock();
                 }
             }
-            //semaphore locks must be used to access objects properly
-            if (objectsRange < randomNum && randomNum <= objectsRange + domainRange) {
+            if (objectsRange < randomNum && randomNum <= (objectsRange + domainRange)) {
+                int randomRow = ThreadLocalRandom.current().nextInt(domainRange);
+                int randomColumn = ThreadLocalRandom.current().nextInt(domainRange+objectsRange);
                 while (randomNum == CurrentDomain) {
                     randomNum = ThreadLocalRandom.current().nextInt(domainRange);
                 }
+                while(randomColumn <= objectsRange){
+                    randomColumn = ThreadLocalRandom.current().nextInt(domainRange+objectsRange);
+                }
 
                 //else
-                //switch to domain (domain + objects) - randomNum
-                lock[randomNum].lock();
-                System.out.println(threadName() + " is trying to switch from D" + CurrentDomain +" to D" + CurrentDomain);
-                if (matrix[0][randomNum].equals("A")) {
-                    System.out.println(threadName() + " Operation successful, switching to D"+MatrixThread.getTid());
+                System.out.println(threadName() + " is trying to switch from D" + CurrentDomain +" to D" + swap);
+                if (matrix[randomRow][CurrentDomain].equals("A  ")) {
+                    lock[randomObject].lock();
+                    System.out.println(threadName() + " Operation successful, switching to D"+swap);
                     //switch to the row needed
                     //setMatrixPosition(domainRange, objectsRange + domainRange);
                     System.out.println(threadName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
                         Thread.yield();
                     }
-                    lock[randomNum].unlock();
                     System.out.println(threadName() + " Operation complete");
+                    lock[randomObject].unlock();
                 } else {
                     System.out.println(threadName() + " Operation failed, permission denied");
+                    for (int i = 0; i < yield; i++) {
+                        Thread.yield();
+                    }
                 }
             }
         }
