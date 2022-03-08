@@ -1,7 +1,7 @@
+//Begin code changes by Austin Mestayer
 package com.company;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -11,14 +11,10 @@ public class AccessMatrix extends Thread {
 
     static int domainRange;
     static int objectsRange;
-    static int domain;
-    static int column;
     static String[][] matrix;
     static Lock[] lock;
     static Random random = new Random();
     static String[] charArray;
-    static final int threadNum = ThreadLocalRandom.current().nextInt(3,8);
-
 
     public static String randomDomain(){
         int r = random.nextInt(2);
@@ -42,12 +38,6 @@ public class AccessMatrix extends Thread {
         }
 
     }
-
-
-//    public void read(){
-//        //need to change to actual file number, but this is a temp solution
-//        System.out.println(Thread.currentThread().getName() + " resource contains " + charArray[random.nextInt(objectsRange)]);
-//    }
     public String writeArray(){
         int randomString = random.nextInt(6);
         if(randomString == 0){
@@ -69,51 +59,5 @@ public class AccessMatrix extends Thread {
             return "Rainbow";
         }
     }
-    public String setMatrixPosition(int rows, int columns){
-        return matrix[rows][columns];
-    }
-
-
-
-    //getters and setters, probably wont need most of these
-    public static int getDomainRange() {
-        return domainRange;
-    }
-
-    public static int getObjectsRange() {
-        return objectsRange;
-    }
-
-    public static int getDomain() {
-        return domain;
-    }
-
-    public static void setDomain(int domain) {
-        AccessMatrix.domain = domain;
-    }
-
-    public static int getColumn() {
-        return column;
-    }
-
-    public static void setColumn(int column) {
-        AccessMatrix.column = column;
-    }
-
-    public static String[][] getMatrix() {
-        return matrix;
-    }
-
-//    public static void setMatrix(String[][] matrix) {
-//        AccessMatrix.matrix = matrix;
-//    }
-
-//    public static Lock getLock() {
-//        return lock;
-//    }
-//
-//    public static void setLock(Lock lock) {
-//        AccessMatrix.lock = lock;
-//    }
 }
-
+//End Code Changes by Austin Mestayer
