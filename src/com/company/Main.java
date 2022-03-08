@@ -78,21 +78,8 @@ public class Main {
 
             AccessList internalList = new AccessList();
             System.out.println("Start file builder iteration: " + i);
-
-            System.out.println();
             LB.buildF(internalList, fileRange, domainRange);
-            System.out.println("Verification F");
-            for (int k = 0; k < internalList.getFSize(); k++)
-                System.out.print(internalList.getFList(k) + " ");
-            System.out.println(internalList.getData());
-            System.out.println();
-
             LB.buildD(internalList, fileRange, domainRange);
-            System.out.println("Verification D");
-            for(int k = 0; k < internalList.getDSize();k++)
-                System.out.print(internalList.getDList(k)+" ");
-            System.out.println();
-
             mainList.add(internalList);
 
         }
