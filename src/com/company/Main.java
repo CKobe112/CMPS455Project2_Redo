@@ -1,18 +1,14 @@
 package com.company;
 
-import sun.awt.image.ImageWatched;
-
-import javax.swing.*;
 import java.util.*;
 
 public class Main {
 
     static int fileRange;
     static int domainRange;
-    static int domainID;
     static Random rand = new Random();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
 
         if (args.length == 0){
             System.out.println("Please enter a valid command.");
@@ -51,26 +47,33 @@ public class Main {
 
     }
 
-    public static void runAL() throws InterruptedException {
+    //end code by Chris Kobe
+
+    //begin code by Chris Kobe
+
+    //sets ranges then passes information and list to threads
+    //number of threads is based off of domain range
+    public static void runAL(){
 
         fileRange = TtoS();
         domainRange = TtoS();
-        System.out.println("fileRange: "+fileRange+" domainRange: "+domainRange);
+        System.out.println("File Range: "+fileRange+" Domain Range: "+domainRange);
+        System.out.println();
         LinkedList<AccessList> mainList = buildAL(fileRange, domainRange);
         listHandler LB = new listHandler();
 
-        System.out.println("Dsize: "+mainList.get(0).getDSize());
-
         LB.displayList(mainList, fileRange, domainRange);
+        System.out.println();
 
         for (int i = 0; i < domainRange; i++){
-            RunList t1 = new RunList(mainList, fileRange, domainRange,i, i);
+            RunList t1 = new RunList(mainList, fileRange, domainRange, i, i);
             t1.setName(String.valueOf(i));
             t1.start();
 
         }
     }
 
+    //builds the list using the listHandler class
     public static LinkedList<AccessList> buildAL(int fileRange, int domainRange) {
 
         LinkedList<AccessList> mainList = new LinkedList<>();
@@ -79,7 +82,6 @@ public class Main {
         for (int i = 0; i < fileRange + domainRange; i++) {
 
             AccessList internalList = new AccessList();
-            //System.out.println("Start file builder iteration: " + i);
             LB.buildF(internalList, fileRange, domainRange);
             LB.buildD(internalList, fileRange, domainRange, mainList.size());
             mainList.add(internalList);
@@ -91,10 +93,11 @@ public class Main {
     public static int TtoS(){
         return rand.nextInt(5) + 3;
     }
+    //end code by Chris Kobe
 
     //Beginning of code written by Chris Kobe, and edited by Spencer Vosloh; edited to match for Task 3 Capability List
 
-    public static void runCL() throws InterruptedException {
+    public static void runCL(){
 
         domainRange = TtoS();
         fileRange = TtoS();

@@ -8,7 +8,8 @@ import java.util.Random;
 public class CapListHndlr {
 
     Random rand = new Random();
-    String[] randomData = {"Peter", "John", "James", "Andrew", "Philip", "Thomas", "Bartholomew", "Matthew", "Simon", "Judas", "Matthias"}; //11 entries
+    String[] randomData = {"Peter", "John", "James", "Andrew", "Philip", "Thomas",
+                            "Bartholomew", "Matthew", "Simon", "Judas", "Matthias"}; //11 entries
 
     public void buildFile(CapabilityList CL, int fileRange, int domainRange){
 
@@ -34,12 +35,8 @@ public class CapListHndlr {
             CL.addFileList(crntThrd);
             CL.addFileList(permissions);
             j++;
-            for(int k = 0; k < CL.getFileSize();k++)
-                System.out.print(CL.getFileList(k)+" ");
-            System.out.println();
         }
         CL.setData(randomData[rand.nextInt(11)]);
-        System.out.println();
     }
 
     public void displayList(LinkedList<CapabilityList> mainCapList, int fileRange, int domainRange){
