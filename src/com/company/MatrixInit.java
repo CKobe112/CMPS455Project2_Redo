@@ -72,8 +72,8 @@ class MatrixInit extends AccessMatrix {
     @Override
     public void run() {
         for (int i = 0; i < domainRange; i++) {
-            MatrixThread threads = new MatrixThread(i);
-            threads.setName("[Thread: " + MatrixThread.getTid() + "(D"+ (MatrixThread.getCurrentDomain() - objectsRange) + ")]");
+            MatrixThread threads = new MatrixThread(i,(i + objectsRange));
+            threads.setName("[Thread: " + MatrixThread.getTid() + "(D"+ (MatrixThread.getCurrentDomain() - objectsRange)+ ")]");
             threads.start();
         }
     }
