@@ -36,12 +36,12 @@ public class Main {
 
         else if (arg0.equals("m")){
             System.out.println("Execute command M");
-            System.out.println();
-            runAL();
         }
 
         else if (arg0.equals("l")){
             System.out.println("Execute command L");
+            System.out.println();
+            runAL();
         }
 
         else if (arg0.equals("c")){
@@ -62,7 +62,7 @@ public class Main {
 
         fileRange = TtoS();
         domainRange = TtoS();
-        System.out.println("fileRange: "+fileRange+" domainRange: "+domainRange);
+        System.out.println("File Range: "+fileRange+" Domain Range: "+domainRange);
         System.out.println();
         LinkedList<AccessList> mainList = buildAL(fileRange, domainRange);
         listHandler LB = new listHandler();
@@ -71,7 +71,7 @@ public class Main {
         System.out.println();
 
         for (int i = 0; i < domainRange; i++){
-            RunList t1 = new RunList(mainList, fileRange, domainRange,i, i);
+            RunList t1 = new RunList(mainList, fileRange, domainRange, i, i);
             t1.setName(String.valueOf(i));
             t1.start();
 
