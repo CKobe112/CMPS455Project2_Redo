@@ -1,92 +1,44 @@
+//Begin code changes by Austin Mestayer
+
 package com.company;
 
-class MatrixInit extends AccessMatrix {
-    int yield;
+import java.util.concurrent.locks.ReentrantLock;
 
-    /**
-     * initializes the matrix with a header and now i need to randomly assign permissions to each domain
-     */
+class MatrixInit extends AccessMatrix {
+
     MatrixInit() {
-        domain = 1 + (int) (Math.random() * ((7 - 3) + 1));
-        objects = 1 + (int) (Math.random() * ((7 - 3) + 1));
-        permissions = 1 + (int) (Math.random() * ((4 - 1) + 1));
-        this.yield = 1 + (int) (Math.random() * ((7 - 3) + 1));
-        matrix = new String[domain][objects + domain];
+        domainRange = random.nextInt((7-3)+1)+3;
+        objectsRange = random.nextInt((7-3)+1)+3;
+        charArray = new String[objectsRange];
+        matrix = new String[domainRange][objectsRange + domainRange];
+        lock = new ReentrantLock[objectsRange];
+        for (int i = 0; i < objectsRange;i++) {
+            lock[i] = new ReentrantLock();
+        }
+
+        /**
+         * initialize char array
+         */
+        for (int i = 0; i < objectsRange; i++) {
+            charArray[i] = writeArray();
+        }
 
 
         /**
-         * The header for the 2D array
+         * initialize 2D array
          */
-        System.out.println("Domain count: " + domain);
-        System.out.println("Object count: " + objects);
-        System.out.print("Domain/Objects ");
-        for (int i = 0; i < objects; i++) {
-            System.out.print("F" + i + " ");
-        }
-        for (int i = 0; i < domain; i++) {
-            System.out.print("D" + i + " ");
-        }
-        System.out.println("    ");
-
-        for (int i = 0; i < domain; i++) {
-            for (int j = 0; j < domain + objects; j++) {
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < domainRange + objectsRange; j++) {
                 matrix[i][j] = "";
             }
         }
 
         /**
-         * sets the array to R or W or R/W or allow randomly
+         * set random permissions and randomly allow for switching
          */
-        /*for (int i = 0; i < domain; i++) {
-            for (int j = 0; j < domain + objects; j++) {
-                switch (permissions) {
-                    case 1:
-                        for (int i = 0; i < domain; i++) {
-                            for (int j = 0; j < domain + objects; j++) {
-                                matrix[i][j] = "R";
-                            }
-                        }
-                        break;
-                    case 2:
-                        for (int i = 0; i < domain; i++) {
-                            for (int j = 0; j < domain + objects; j++) {
-                                matrix[i][j] = "W";
-                            }
-                        }
-                        break;
-                    case 3:
-                        for (int i = 0; i < domain; i++) {
-                            for (int j = 0; j < domain + objects; j++) {
-                                matrix[i][permissions] = "R";
-                            }
-                        }
-                        break;
-                    case 4:
-                        for (int i = 0; i < domain; i++) {
-                            for (int j = 0; j < domain + objects; j++) {
-                                matrix[i][permissions] = "R";
-                            }
-                        }
-                        break;
-                    default:
-                        for (int i = 0; i < domain; i++) {
-                            for (int j = 0; j < domain + objects; j++) {
-                                matrix[i][permissions] = "R";
-                            }
-                        }
-
-                }
-            }
-        }*/
-        /**
-         * sets the first column equal to the domain header
-         */
-//        for (int i = 0; i < domain; i++) {
-//            matrix[i][0] = "D" + i;
-//        }
-        for (int i = 0; i < domain; i++) {
-            for (int j = 0; j < domain + objects; j++) {
-                if (j < domain) {
+        for (int i = 0; i < domainRange; i++) {
+            for (int j = 0; j < domainRange+objectsRange; j++) {
+                if (j >= objectsRange) {
                     matrix[i][j] = randomDomain();
                 } else {
                     matrix[i][j] = randomPermission();
@@ -94,30 +46,36 @@ class MatrixInit extends AccessMatrix {
             }
         }
         /**
+         * The header for the 2D array
+         */
+        System.out.println("Domain count: " + domainRange);
+        System.out.println("Object count: " + objectsRange);
+        System.out.print("Domain/Objects \t");
+        for (int i = 0; i < objectsRange; i++) {
+            System.out.print("F" + i + " | ");
+        }
+        for (int i = 0; i < domainRange; i++) {
+            System.out.print("D" + i + " | ");
+        }
+        System.out.println("    ");
+        /**
          * prints the matrix
          */
         for (int i = 0; i < matrix.length; i++) {
-            //System.out.print("            D"+ i + " "+"\n");
+            System.out.print("\t\tD"+ i + " | ");
             for (int j = 0; j < matrix[i].length; j++) {
                 System.out.print("  " + matrix[i][j] + "");
             }
             System.out.println();
         }
-        //System.out.println(permissions);
-
     }
-
     @Override
     public void run() {
-//        int randomRow = 1 + (int) (Math.random() * ((7 - 3) + 1));
-//        int randomColumn = 1 + (int) (Math.random() * ((7 - 3) + 1));
-
-
-        //System.out.println();
-        //System.out.println(randomRow);
-        //System.out.println(randomColumn);
-//        for (int i = 0; i < yield; i++) {
-//            AccessMatrix.yield();
-//        }
+        for (int i = 0; i < domainRange; i++) {
+            MatrixThread threads = new MatrixThread(i);
+            threads.setName("[Thread: " + MatrixThread.getTid() + "(D"+ (MatrixThread.getCurrentDomain() - objectsRange) + ")]");
+            threads.start();
+        }
     }
 }
+//End Code Changes by Austin Mestayer
