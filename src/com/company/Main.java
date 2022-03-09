@@ -34,11 +34,11 @@ public class Main {
 
         else if (arg0.equals("m")){
             System.out.println("Execute command M");
-            runAL();
         }
 
         else if (arg0.equals("l")){
             System.out.println("Execute command L");
+            runAL();
         }
 
         else if (arg0.equals("c")){
