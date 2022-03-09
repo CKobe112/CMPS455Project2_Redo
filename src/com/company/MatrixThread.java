@@ -2,6 +2,7 @@
 
 package com.company;
 
+import javax.swing.plaf.ColorUIResource;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MatrixThread extends AccessMatrix {
@@ -10,27 +11,16 @@ public class MatrixThread extends AccessMatrix {
     int yield;
     static int CurrentDomain;
     int randomObject;
-    MatrixThread(int tid) {
+    MatrixThread(int tid, int CurrentDomain) {
         MatrixThread.tid = tid;
+        MatrixThread.CurrentDomain = CurrentDomain;
         yield = ThreadLocalRandom.current().nextInt(3,8);
         randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
         //keeps track of domains on end of matrix, meaning tid + objectsRange would give use the positions after the objects
-        CurrentDomain = tid + objectsRange;
     }
     public static String threadName(){
         return MatrixThread.currentThread().getName();
     }
-
-    public static int getTid() {
-        return tid;
-    }
-    public static int getCurrentDomain() {
-        return CurrentDomain;
-    }
-
-//    public static void updateThreadName(){
-//        MatrixThread.currentThread().setName("[Thread: " + MatrixThread.getTid() + "(D"+ (MatrixThread.getCurrentDomain() - objectsRange) + ")]");
-//    }
 
     public void read(){
         //need to change to actual file number, but this is a temp solution
@@ -40,31 +30,41 @@ public class MatrixThread extends AccessMatrix {
         int randomString = random.nextInt(6);
         if(randomString == 0){
             System.out.println(threadName()+ " writes 'Green' to resource F" + randomObject);
+            charArray[randomObject] = "Green";
         }
         else if(randomString == 1){
             System.out.println(threadName() + " writes 'Red' to resource F" + randomObject);
+            charArray[randomObject] = "Red";
         }
         else if(randomString == 2){
             System.out.println(threadName() + " writes 'Yellow' to resource F" + randomObject);
+            charArray[randomObject] = "Yellow";
         }
         else if(randomString == 3){
             System.out.println(threadName() + " writes 'Blue' to resource F" + randomObject);
+            charArray[randomObject] = "Blue";
         }
         else if(randomString == 4){
             System.out.println(threadName() + " writes 'Purple' to resource F" + randomObject);
+            charArray[randomObject] = "Purple";
         }
         else {
             System.out.println(threadName() + " writes 'Rainbow' to resource F" + randomObject);
+            charArray[randomObject] = "Rainbow";
 
         }
+
+    }
+    public static void setCurrentDomain(int currentDomain) {
+        CurrentDomain = currentDomain;
     }
 
     @Override
     public void run() {
-
+        MatrixThread.yield();
         for (int runs = 0; runs < numRequests; runs++) {
             //randomNum is "X" from the project specs
-            int randomNum = ThreadLocalRandom.current().nextInt(0,objectsRange + domainRange);
+            int randomNum = ThreadLocalRandom.current().nextInt(0,(objectsRange + domainRange));
             if (randomNum <= objectsRange) {
                 //generate another number between 0 and 1
                 int operation = random.nextInt(2);
@@ -73,7 +73,7 @@ public class MatrixThread extends AccessMatrix {
                     System.out.println(threadName() + " attempting to read resource F" + randomObject);
                     //check read rights
                     lock[randomObject].lock();
-                    if (Arbitrator.checkReadPerm((CurrentDomain - objectsRange),randomObject)) {
+                    if (Arbitrator.checkReadPerm(tid,randomObject)) {
 
                         read();
                         System.out.println(threadName() + " Yielding " + yield + " times");
@@ -82,6 +82,7 @@ public class MatrixThread extends AccessMatrix {
                         }
                         lock[randomObject].unlock();
                         System.out.println(threadName() + " Operation complete");
+                        randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
                     }
 
                     else{
@@ -90,23 +91,27 @@ public class MatrixThread extends AccessMatrix {
                         for (int i = 0; i < yield; i++) {
                             MatrixThread.yield();
                         }
+                        lock[randomObject].unlock();
+                        System.out.println(threadName() + " Operation complete");
+                        randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
                     }
-                    lock[randomObject].unlock();
-                    System.out.println(threadName() + " Operation complete");
+
                 }
                 else {
 
                     System.out.println(threadName() + " attempting to write to resource F" + randomObject);
                     lock[randomObject].lock();
-                    if(Arbitrator.checkWritePerm((CurrentDomain - objectsRange),randomObject)) {
+                    if(Arbitrator.checkWritePerm(tid,randomObject)) {
 
                         write();
                         System.out.println(threadName() + " Yielding " + yield + " times");
                         for (int i = 0; i < yield; i++) {
                             MatrixThread.yield();
                         }
+
                         lock[randomObject].unlock();
                         System.out.println(threadName() + " Operation complete");
+                        randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
                     }
                     else{
                         System.out.println(threadName() + " does not have permission to write");
@@ -116,39 +121,32 @@ public class MatrixThread extends AccessMatrix {
                         }
                         lock[randomObject].unlock();
                         System.out.println(threadName() + " Operation complete");
+                        randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
                     }
 
                 }
             }
-            if (objectsRange < randomNum && randomNum <= (objectsRange + domainRange)) {
+            else if (objectsRange < randomNum && randomNum <= (objectsRange + domainRange)) {
 
                 while (randomNum == CurrentDomain) {
-                    if((objectsRange > domainRange)){
-                        randomNum = ThreadLocalRandom.current().nextInt(domainRange,(objectsRange + domainRange));
-
-                    }
-                    if (objectsRange < domainRange){
-                        randomNum = ThreadLocalRandom.current().nextInt(objectsRange,(objectsRange + domainRange)) ;
-
-                    }
+                    randomNum = ThreadLocalRandom.current().nextInt(objectsRange,(objectsRange + domainRange));
                 }
-                int swap = domainRange + objectsRange - randomNum ;
-                System.out.println(threadName() + " is trying to switch from D" + tid +" to D" + swap);
+                randomNum = randomNum -  objectsRange;
+
+                System.out.println(threadName() + " is trying to switch from D" + (CurrentDomain - objectsRange) +" to D" + randomNum);
                 //check if has permission to switch
                 lock[randomObject].lock();
-                if(Arbitrator.checkSwitch(tid,swap)) {
+                if(Arbitrator.checkSwitch(tid,randomNum)) {
+                    System.out.println(threadName() + " Operation successful, switching to D" + randomNum);
                     //update CurrentDomain
-                    CurrentDomain = swap;
-                    tid = swap;
-                    System.out.println(threadName() + " Operation successful,           switching to D" + CurrentDomain);
-                    //updateThreadName();
+                    setCurrentDomain(randomNum);
                     System.out.println(threadName() + " Yielding " + yield + " times");
                     for (int i = 0; i < yield; i++) {
                         MatrixThread.yield();
                     }
                     lock[randomObject].unlock();
                     System.out.println(threadName() + " Operation complete");
-
+                    randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
                 }
                 else {
                     System.out.println(threadName() + " Operation failed, permission denied");
@@ -159,11 +157,18 @@ public class MatrixThread extends AccessMatrix {
                     }
                     lock[randomObject].unlock();
                     System.out.println(threadName() + " Operation complete");
+                    randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
 
                 }
 
             }
         }
+    }
+    public static int getTid() {
+        return tid;
+    }
+    public static int getCurrentDomain() {
+        return CurrentDomain;
     }
 
 }
