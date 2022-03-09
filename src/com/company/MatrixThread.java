@@ -16,7 +16,7 @@ public class MatrixThread extends AccessMatrix {
         MatrixThread.CurrentDomain = CurrentDomain;
         yield = ThreadLocalRandom.current().nextInt(3,8);
         randomObject = ThreadLocalRandom.current().nextInt(objectsRange);
-        //keeps track of domains on end of matrix, meaning tid + objectsRange would give use the positions after the objects
+
     }
     public static String threadName(){
         return MatrixThread.currentThread().getName();
