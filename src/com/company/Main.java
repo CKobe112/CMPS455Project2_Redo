@@ -31,6 +31,8 @@ public class Main {
 
         else if (arg0.equals("m")){
             System.out.println("Execute command M");
+            MatrixInit matrix = new MatrixInit();
+            matrix.run();
         }
 
         else if (arg0.equals("l")){
