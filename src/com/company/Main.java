@@ -1,3 +1,7 @@
+//CMPS 455 Project 2
+//Chris Kobe - C00242442
+//Austin Mestayer - C00010908
+//Spencer Vosloh - C00277633
 package com.company;
 
 import java.util.*;
