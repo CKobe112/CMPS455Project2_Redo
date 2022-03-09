@@ -3,8 +3,8 @@
 package com.company;
 
 public class Arbitrator extends MatrixThread {
-    Arbitrator(int tid) {
-        super(tid);
+    Arbitrator(int tid, int currentDomain) {
+        super(tid,currentDomain);
     }
     
     public static Boolean checkSwitch(int row, int column){
